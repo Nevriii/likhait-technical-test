@@ -24,17 +24,17 @@ Newly added expenses should appear at the top of the expense table, ordered by t
 
 ---
 
-## FEATURE-001: Add Category Management Feature
+## FEATURE-001: Add Category Management Feature (Done)
 
-## 📝 Summary
+## 📝 Summary (Done)
 
 Implement the ability to create new expense categories dynamically through the UI, allowing users to customize categories beyond the predefined list.
 
-### 🔍 Actual Behavior
+### 🔍 Actual Behavior (Done)
 
 Users can only select from a predefined list of expense categories. There is no way to add custom categories.
 
-### 🎯 Expected Behavior
+### 🎯 Expected Behavior (Done)
 
 Users should be able to create new categories through the UI with the following features:
 
