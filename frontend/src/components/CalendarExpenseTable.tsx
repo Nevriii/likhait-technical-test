@@ -13,14 +13,18 @@ import { deleteExpense, updateExpense } from "../services/api";
 
 interface CalendarExpenseTableProps {
   expenses: Expense[];
+  categories: string[];
   onExpenseUpdated: () => void;
+  onAddCategory: () => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
 export function CalendarExpenseTable({
   expenses,
+  categories,
   onExpenseUpdated,
+  onAddCategory,
 }: CalendarExpenseTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
@@ -191,9 +195,11 @@ export function CalendarExpenseTable({
             initialData={{
               amount: editingExpense.amount.toString(),
               description: editingExpense.description,
-              category: editingExpense.category,
               date: formatDate(new Date(editingExpense.date)),
+              category: editingExpense.category,
             }}
+            categories={categories}
+            onAddCategory={onAddCategory}
             onSubmit={handleUpdate}
             onCancel={() => {
               setIsEditModalOpen(false);

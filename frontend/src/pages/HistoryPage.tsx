@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getExpenses, createExpense } from "../services/api";
-import { Expense, ExpenseFormData } from "../types";
+import { getExpenses, createExpense, fetchCategories, createCategory } from "../services/api";
+import { Expense, ExpenseFormData, Category } from "../types";
 import YearNavigation from "../components/YearNavigation";
 import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
@@ -11,8 +11,11 @@ import { COLORS } from "../constants/colors";
 
 const HistoryPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   // Get year and month from URL params, default to current date if not provided
   const getInitialYearMonth = () => {
@@ -49,6 +52,18 @@ const HistoryPage: React.FC = () => {
     fetchExpenses();
   }, [selectedYear, selectedMonth]);
 
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategoriesList(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    loadCategories();
+  }, []);
+
   const fetchExpenses = async () => {
     try {
       setLoading(true);
@@ -79,6 +94,20 @@ const HistoryPage: React.FC = () => {
     } catch (error) {
       console.error("Error creating expense:", error);
       throw error;
+    }
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    try {
+      await createCategory(newCategoryName);
+      setNewCategoryName("");
+      setIsCategoryModalOpen(false);
+      // Refresh categories
+      const data = await fetchCategories();
+      setCategoriesList(data);
+    } catch (error) {
+      console.error("Error creating category:", error);
     }
   };
 
@@ -148,9 +177,11 @@ const HistoryPage: React.FC = () => {
             onYearChange={handleYearChange}
           />
         </div>
-        <Button variant="primary" onClick={() => setIsModalOpen(true)}>
-          Add Expense
-        </Button>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+            Add Expense
+          </Button>
+        </div>
       </div>
 
       <MonthNavigation
@@ -172,7 +203,9 @@ const HistoryPage: React.FC = () => {
             <div style={{ marginTop: "32px" }}>
               <CalendarExpenseTable
                 expenses={expenses}
+                categories={categoriesList.map(c => c.name)}
                 onExpenseUpdated={fetchExpenses}
+                onAddCategory={() => setIsCategoryModalOpen(true)}
               />
             </div>
           </>
@@ -185,9 +218,43 @@ const HistoryPage: React.FC = () => {
         title="Add New Expense"
       >
         <ExpenseForm
+          categories={categoriesList.map(c => c.name)}
+          onAddCategory={() => setIsCategoryModalOpen(true)}
           onSubmit={handleAddExpense}
           onCancel={() => setIsModalOpen(false)}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        title="Add New Category"
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <label style={{ fontWeight: 600, color: COLORS.secondary.s10 }}>Category Name</label>
+            <input
+              type="text"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="e.g., Gifts, Subscriptions"
+              style={{
+                padding: "0.75rem",
+                borderRadius: "0.5rem",
+                border: `1px solid ${COLORS.secondary.s03}`,
+                fontSize: "1rem",
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end", marginTop: "1rem" }}>
+            <Button variant="secondary" onClick={() => setIsCategoryModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleAddCategory}>
+              Add Category
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

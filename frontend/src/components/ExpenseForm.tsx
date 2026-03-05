@@ -4,7 +4,6 @@
 
 import React from "react";
 import { ExpenseFormData } from "../types";
-import { EXPENSE_CATEGORIES } from "../constants/categories";
 import { TextField, SelectBox, Button } from "../vibes";
 import { useExpenseForm } from "../hooks/useExpenseForm";
 
@@ -13,6 +12,9 @@ interface ExpenseFormProps {
   onSubmit: (data: ExpenseFormData) => Promise<void>;
   onCancel?: () => void;
   submitLabel?: string;
+  categories?: string[];
+  //--- My Edit ---
+  onAddCategory?: () => void;
 }
 
 export function ExpenseForm({
@@ -20,6 +22,9 @@ export function ExpenseForm({
   onSubmit,
   onCancel,
   submitLabel = "Add Expense",
+  categories = [],
+  //--- My Edit ---
+  onAddCategory,
 }: ExpenseFormProps) {
   const { formData, errors, isSubmitting, handleChange, handleSubmit } =
     useExpenseForm({
@@ -39,7 +44,7 @@ export function ExpenseForm({
     marginTop: "0.5rem",
   };
 
-  const categoryOptions = EXPENSE_CATEGORIES.map((category) => ({
+  const categoryOptions = categories.map((category) => ({
     value: category,
     label: category,
   }));
@@ -69,15 +74,28 @@ export function ExpenseForm({
         required
       />
 
-      <SelectBox
-        label="Category"
-        options={categoryOptions}
-        value={formData.category}
-        onChange={(e) => handleChange("category", e.target.value)}
-        error={errors.category}
-        fullWidth
-        required
-      />
+      <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+        <div style={{ flex: 1 }}>
+          <SelectBox
+            label="Category"
+            options={categoryOptions}
+            value={formData.category}
+            onChange={(e) => handleChange("category", e.target.value)}
+            error={errors.category}
+            fullWidth
+            required
+          />
+        </div>
+        <Button 
+          type="button" 
+          variant="secondary" 
+          onClick={onAddCategory}
+          style={{ padding: "0.75rem" }}
+        >
+          Add Category
+        </Button>
+      </div>
+
 
       <TextField
         label="Date"
