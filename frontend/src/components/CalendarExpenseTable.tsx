@@ -4,7 +4,7 @@
 
 import React, { useState } from "react";
 import { Expense, ExpenseFormData } from "../types";
-import { formatCurrency, formatDate } from "../utils/expenseUtils";
+import { formatCurrency, formatDisplayDate, formatDateWithTime } from "../utils/expenseUtils";
 import { getCategoryEmoji } from "../constants/categoryEmojis";
 import { COLORS } from "../constants/colors";
 import { Button, Modal, Pagination } from "../vibes";
@@ -132,7 +132,7 @@ export function CalendarExpenseTable({
         <tbody>
           {currentExpenses.map((expense) => (
             <tr key={expense.id}>
-              <td style={tdStyle}>{formatDate(new Date(expense.date))}</td>
+              <td style={tdStyle}>{formatDisplayDate(new Date(expense.date))}</td>
               <td style={tdStyle}>{expense.description}</td>
               <td style={tdStyle}>
                 <span
@@ -192,7 +192,7 @@ export function CalendarExpenseTable({
               amount: editingExpense.amount.toString(),
               description: editingExpense.description,
               category: editingExpense.category,
-              date: formatDate(new Date(editingExpense.date)),
+              date: formatDateWithTime(new Date(editingExpense.date)),
             }}
             onSubmit={handleUpdate}
             onCancel={() => {

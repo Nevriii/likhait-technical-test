@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { ExpenseFormData } from "../types";
-import { formatDate } from "../utils/expenseUtils";
+import { formatDateWithTime } from "../utils/expenseUtils";
 
 interface UseExpenseFormProps {
   initialData?: Partial<ExpenseFormData>;
@@ -16,7 +16,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
     amount: initialData?.amount || "",
     description: initialData?.description || "",
     category: initialData?.category || "",
-    date: initialData?.date || formatDate(new Date()),
+    date: initialData?.date || formatDateWithTime(new Date()),
   });
 
   const [errors, setErrors] = useState<Partial<ExpenseFormData>>({});
@@ -68,7 +68,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
         amount: "",
         description: "",
         category: "",
-        date: formatDate(new Date()),
+        date: formatDateWithTime(new Date()),
       });
       setErrors({});
     } catch (error) {
@@ -83,7 +83,7 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
       amount: initialData?.amount || "",
       description: initialData?.description || "",
       category: initialData?.category || "",
-      date: initialData?.date || formatDate(new Date()),
+      date: initialData?.date || formatDateWithTime(new Date()),
     });
     setErrors({});
   };

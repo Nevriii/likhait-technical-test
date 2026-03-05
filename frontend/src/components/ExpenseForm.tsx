@@ -80,8 +80,8 @@ export function ExpenseForm({
       />
 
       <TextField
-        label="Date"
-        type="date"
+        label="Date & Time"
+        type="datetime-local"
         value={formData.date}
         onChange={(e) => handleChange("date", e.target.value)}
         error={errors.date}
