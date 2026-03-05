@@ -49,17 +49,17 @@ N/A - Feature doesn't exist yet
 
 ---
 
-## BONUS-001: Prevent Future Date Expense Creation
+## BONUS-001: Prevent Future Date Expense Creation (Done)
 
-## 📝 Summary
+## 📝 Summary (Done)
 
 Add validation to prevent users from creating expenses with dates in the future. Users should only be able to add expenses for today or past dates.
 
-### 🔍 Actual Behavior
+### 🔍 Actual Behavior (Done)
 
 Users can select any date in the future when creating an expense, which doesn't make sense for expense tracking (you can't have spent money on a future date).
 
-### 🎯 Expected Behavior
+### 🎯 Expected Behavior (Done)
 
 The date picker in the expense form should:
 
